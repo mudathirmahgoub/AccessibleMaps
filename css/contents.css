@@ -1,0 +1,14 @@
+/*div{*/
+    /*font-weight:bolder;*/
+    /*font-size: large;*/
+    /*background: black !important;*/
+    /*color: white !important;*/
+/*}*/
+
+.inversionEnabled{
+    filter: contrast(100%) invert(100%) !important;
+}
+
+.inversionDisabled{
+    filter: none;
+}
