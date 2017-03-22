@@ -35,6 +35,7 @@ $(function () {
 
     // set the text of the button
     function setEnabledButtonText() {
+
         if (enabled) {
             chrome.tts.speak('Enabled');
             enableButton.text('Enabled');
@@ -43,6 +44,17 @@ $(function () {
             enableButton.text('Disabled');
             chrome.tts.speak('Disabled');
         }
+
+        chrome.tabs.getSelected(null, function(tab){
+            if(enabled)
+            {
+                chrome.pageAction.setIcon({tabId: tab.id,path: { "128": "images/enabledIcon.png"}});
+            }
+            else
+            {
+                chrome.pageAction.setIcon({tabId: tab.id,path: { "128": "images/disabledIcon.png"}});
+            }
+        });
         console.log("enabled = " + enabled);
     }
 
