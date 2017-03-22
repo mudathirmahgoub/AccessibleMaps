@@ -1,0 +1,51 @@
+{
+  "manifest_version": 2,
+  "name": "Accessible Maps",
+  "description": "Makes maps more accessible for people with low vision",
+  "version": "1.0",
+  "page_action": {
+    "default_icon": "icon.png",
+    "default_title": "Accessible Maps",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.google.com/maps/*",
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "jquery-3.1.1.js",
+        "contents.js"
+      ],
+      "css": [
+        "contents.css"
+      ]
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "storage",
+    "notifications",
+    "contextMenus",
+    "tts",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "commands": {
+    "toggleColorsInversion": {
+      "suggested_key": {
+        "default": "Ctrl+Space",
+        "mac": "Ctrl+Space"
+      },
+      "description": "Toggle Colors Inversion"
+    }
+  }
+}

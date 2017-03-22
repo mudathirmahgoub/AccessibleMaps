@@ -1,0 +1,10 @@
+/*div{*/
+    /*font-weight:bolder;*/
+    /*font-size: large;*/
+    /*background: black !important;*/
+    /*color: white !important;*/
+/*}*/
+
+img{
+    filter: contrast(200%) invert(200%);
+}
