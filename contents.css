@@ -5,6 +5,10 @@
     /*color: white !important;*/
 /*}*/
 
-img{
-    filter: contrast(200%) invert(200%);
+.inversionEnabled{
+    filter: contrast(200%) invert(200%) !important;
+}
+
+.inversionDisabled{
+    filter: none;
 }
