@@ -8,9 +8,16 @@ $(function () {
         // if the message type is filter
         if (request.type == "filter") {
             console.log("Inversion :" + request.inversionEnabled);
+
+            // $.each($("*"), function(index, element) {
+            //     console.log($(element));
+            //     console.log($(element).css("color"));
+            //     console.log($(element).css("background-color"));
+            // });
+
             if(request.inversionEnabled) {
                 // invert the colors
-                $("html").addClass("inversionEnabled");
+                $("body").addClass("inversionEnabled");
 
                 // $.each($("*"), function(index, element) {
                 //     $(element).css({
@@ -21,7 +28,7 @@ $(function () {
             else
             {
                 // remove the inversion
-                $("html").removeClass("inversionEnabled");
+                $("body").removeClass("inversionEnabled");
                 // $.each($("*"), function(index, element) {
                 //     $(element).css({
                 //         "filter": "none"

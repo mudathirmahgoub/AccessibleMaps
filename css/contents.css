@@ -6,7 +6,8 @@
 /*}*/
 
 .inversionEnabled{
-    filter: contrast(100%) invert(100%) !important;
+    filter: invert(100%) !important;
+    background: black !important;
 }
 
 .inversionDisabled{

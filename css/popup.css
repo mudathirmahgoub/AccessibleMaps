@@ -9,8 +9,16 @@
 body{
     background: black;
     color: white;
+    font-weight: bold;
+    width: 200px;
+    height: 300px;
 }
 
-#enableButton{
-    border: white solid thin ;
+
+button {
+    display: inline-block;
+}
+
+.container{
+    padding: 10px;
 }
