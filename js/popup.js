@@ -71,8 +71,11 @@ $(function () {
     // send a message to the contents.js with the new value for enabled
     function sendFilterMessage()
     {
+        // get the value of the selected radio input
+        var mode = $('input[name=mode]:checked').val();
+
         chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {type: "filter", inversionEnabled: enabled});
+            chrome.tabs.sendMessage(tabs[0].id, {type: mode, inversionEnabled: enabled});
             console.log("Message sent");
         });
     }

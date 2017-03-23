@@ -8,6 +8,9 @@
     "default_title": "Accessible Maps",
     "default_popup": "popup.html"
   },
+
+  "options_page": "options.html",
+
   "background": {
     "scripts": [
       "js/background.js"
@@ -23,6 +26,9 @@
       ],
       "js": [
         "js/jquery-3.1.1.js",
+        "js/screenshot/html2canvas.js",
+        "js/screenshot/html2canvas.svg.js",
+        "js/collections.min.js",
         "js/contents.js"
       ],
       "css": [
@@ -47,5 +53,6 @@
       },
       "description": "Toggle Colors Inversion"
     }
-  }
+  },
+  "content_security_policy": "script-src 'self' https://maps.googleapis.com https://maps.gstatic.com; object-src 'self'"
 }

@@ -1,12 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Accessible Maps Options</title>
-    <script src="js/jquery-3.1.1.js" type="text/javascript"></script>
-    <script src="js/options.js" type="text/javascript"></script>
-    <link href="css/popup.css" type="text/css" rel="stylesheet"/>
+    <meta charset="viewport" content="initial-scale=1.0, user-scalable=no">
+    <style type="text/css">
+        html {
+            height: 100%
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0
+        }
+
+        #mapDiv {
+            height: 100%;
+            width: 100%;
+        }
+
+    </style>
+    <script type=text/javascript src="js/jquery-3.1.1.js"></script>
+    <script nonce="$RANDOM" type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCb2qb3QksKFmP-bvV8RU2Rd1KoUEMYlf0">
+    </script>
+    <script src="js/google.js" type="text/javascript">
+    </script>
+    <title>Accessible Maps</title>
 </head>
 <body>
+<label >River Color: </label>
+<input type="color" id="riverColor" value="#0000ff">
+<div id="mapDiv">
+</div>
 </body>
 </html>
