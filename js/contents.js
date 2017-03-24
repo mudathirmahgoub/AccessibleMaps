@@ -66,7 +66,9 @@ $(function () {
                     // get the pixels of the canvas
                     var context = canvas.getContext("2d");
                     var imageData = context.getImageData(0, 0, canvas.width, canvas.height );
-                    for(var i = 0; i < canvas.width; i += 3) {
+
+                    for(var i = 0; i < canvas.width; i += 3) // every three pixels for performance.
+                    {
                         for(var j = 0; j < canvas.height ; j += 3)
                         {
                             var redComponent = imageData.data[((i * (imageData.width * 4)) + (j * 4)) + 0];
@@ -81,7 +83,6 @@ $(function () {
                                         formatNumberLength(blueComponent, 3)
                                  //       formatNumberLength(alphaComponent, 3);
 
-                            //var value = colorsMap.has(rgba)? colorsMap.get(rgba)+1 : 1;
                             colorsList.push(rgba);
                         }
                     }
@@ -113,48 +114,47 @@ $(function () {
                        return 1;
                     });
 
+
                     console.log(distinctColors);
 
+                    var invertedColors  = {
+                        backgroundColor : "black",
+                        color: "white",
+                        border: "orange"};
                     // check if the most used color is close to white
                     if (distinctColors[0].color >= "240240240")
                     {
-                        for(var i = 0; i < canvas.width; i += 1) {
-                            for (var j = 0; j < canvas.height; j += 1) {
+                        $.each(distinctColors, function () {
+                            this.color = "rgb(" + this.color.substr(0,3) + ", " + this.color.substr(3,3)
+                                +", " + this.color.substr(6, 3) + ")";
+                            console.log(this);
+                        });
 
-                                var rIndex = ((i * (imageData.width * 4)) + (j * 4)) + 0;
-                                var gIndex = ((i * (imageData.width * 4)) + (j * 4)) + 1;
-                                var bIndex = ((i * (imageData.width * 4)) + (j * 4)) + 2;
+                        $("*:visible").each(function(){
 
-                                var r = imageData.data[rIndex];
-                                var g = imageData.data[gIndex];
-                                var b = imageData.data[bIndex];
+                            var backgroundColor = rgb2hex($(this).css("background-color"));
+                            if( backgroundColor == rgb2hex(distinctColors[0].color))
+                            {
+                                $(this).css("background-color", invertedColors.backgroundColor);
+                                $(this).css("color", invertedColors.color );
 
-                                //  var a = imageData.data[((i * (imageData.width * 4)) + (j * 4)) + 3];
-
-                                var rgbImage = formatNumberLength(r, 3) +
-                                    formatNumberLength(g, 3) +
-                                    formatNumberLength(b, 3);
-                                //       formatNumberLength(alphaComponent, 3);
-
-                                if (distinctColors.some(function (element, index, array) {
-                                        return element.color == rgbImage;
-                                    }))
+                                var borderColor = rgb2hex($(this).css("border-color"));
+                                console.log(backgroundColor + " : " + borderColor);
+                                if(backgroundColor !== borderColor)
                                 {
-                                    imageData[rIndex] = 255 - r;
-                                    imageData[gIndex] = 255 - g;
-                                    imageData[bIndex] = 255 - b;
+                                    $(this).css("border-color", invertedColors.border);
                                 }
                             }
-                        }
+                        });
                     }
-                    canvas.style.cssText = "z-index: 5000";
-                    context.putImageData(imageData, 0, 0);
-                    document.body.appendChild(canvas);
                     console.log("Done");
                 }
             });
         }
-        else {
+        else
+        {
+            // reload the page
+            window.location.reload();
         }
     }
     function invertUsingManualColors(request) {
@@ -167,7 +167,23 @@ $(function () {
     }
 
 
-    function formatNumberLength(num, length) {
+    function rgb2hex(rgbColor){
+        var rgb = rgbColor;
+        if(rgb.startsWith("rgba"))
+        {
+            rgb = rgb.replace(/,\s\d\)/, ")");
+            rgb = rgb.replace("rgba", "rgb");
+        }
+        var rgb = rgb.replace(/\s/g,'').match(/^rgb?\((\d+),(\d+),(\d+)/i);
+        return (rgb && rgb.length === 4) ? "#" +
+            ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+            ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+            ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : rgbColor;
+    }
+
+
+
+function formatNumberLength(num, length) {
         var r = "" + num;
         while (r.length < length) {
             r = "0" + r;
