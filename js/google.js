@@ -3,11 +3,15 @@ $(function () {
     var geocoder = new google.maps.Geocoder();
 
     $("#riverColor").change(initialize);
+    $("#roadColor").change(initialize);
+    $("#highwayColor").change(initialize);
 
     initialize();
 
     function initialize() {
         var riverColor = $("#riverColor").val();
+        var roadColor = $("#roadColor").val();
+        var highwayColor = $("#highwayColor").val();
         console.log(riverColor);
         var mapOptions = {
             center: new google.maps.LatLng(41.66242160061023, -91.53680428270343),
@@ -46,7 +50,7 @@ $(function () {
                 {
                     featureType: 'road',
                     elementType: 'geometry',
-                    stylers: [{color: '#38414e'}]
+                    stylers: [{color: roadColor}]
                 },
                 {
                     featureType: 'road',
@@ -61,7 +65,7 @@ $(function () {
                 {
                     featureType: 'road.highway',
                     elementType: 'geometry',
-                    stylers: [{color: '#746855'}]
+                    stylers: [{color: highwayColor}]
                 },
                 {
                     featureType: 'road.highway',
