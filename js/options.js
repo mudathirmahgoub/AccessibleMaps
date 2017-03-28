@@ -12,7 +12,6 @@ $(function () {
         var riverColor = $("#riverColor").val();
         var roadColor = $("#roadColor").val();
         var highwayColor = $("#highwayColor").val();
-        console.log(riverColor);
         var mapOptions = {
             center: new google.maps.LatLng(41.66242160061023, -91.53680428270343),
             zoom: 17,
@@ -106,8 +105,40 @@ $(function () {
 
         };
         map = new google.maps.Map(document.getElementById("mapDiv"), mapOptions);
-    }
 
+        google.maps.event.addListener(map, 'click', function(event) {
+            console.log(event.latLng.lat());
+            console.log(event.latLng.lng());
+
+            var url =
+                "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+                event.latLng.lat() + "," + event.latLng.lng() + "&key=AIzaSyCb2qb3QksKFmP-bvV8RU2Rd1KoUEMYlf0";
+
+
+            $.get( url, function(data) {
+                console.log(data);
+                if(data.status == "OK")
+                {
+                    if(data.results.length > 0)
+                    {
+                        console.log(data.results[0].formatted_address);
+                        chrome.tts.speak(data.results[0].formatted_address);
+                    }
+                    else
+                    {
+                        console.log("No result");
+                        chrome.tts.speak("No result");
+                    }
+                }
+            })
+            .fail(function() {
+                console.log( "Couldn't find the address of this location" );
+            })
+            .always(function() {
+                console.log( "finished" );
+            });
+        });
+    }
     initialize();
 
 });
