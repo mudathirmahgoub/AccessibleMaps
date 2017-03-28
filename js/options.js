@@ -106,7 +106,7 @@ $(function () {
         };
         map = new google.maps.Map(document.getElementById("mapDiv"), mapOptions);
 
-        google.maps.event.addListener(map, 'click', function(event) {
+        google.maps.event.addListener(map, 'rightclick', function(event) {
             console.log(event.latLng.lat());
             console.log(event.latLng.lng());
 
@@ -123,6 +123,23 @@ $(function () {
                     {
                         console.log(data.results[0].formatted_address);
                         chrome.tts.speak(data.results[0].formatted_address);
+
+                        var request = {
+                            location:  event.latLng,
+                            radius: '10' // 10 meters
+                        };
+
+
+                        var service = new google.maps.places.PlacesService(map);
+                        service.nearbySearch(request, function (results, status) {
+                        if (status == google.maps.places.PlacesServiceStatus.OK) {
+                            for (var i = 0; i < results.length; i++) {
+                                var place = results[i];
+                                console.log(place);
+                            }
+                        }
+                    });
+
                     }
                     else
                     {
