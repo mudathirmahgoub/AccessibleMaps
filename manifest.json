@@ -43,7 +43,8 @@
     "contextMenus",
     "tts",
     "http://*/*",
-    "https://*/*"
+    "https://*/*",
+    "<all_urls>"
   ],
   "commands": {
     "toggleColorsInversion": {

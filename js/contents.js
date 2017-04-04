@@ -153,8 +153,17 @@ $(function () {
                         });
                     }
 
+                    console.log(request.imageData.substr(0, 50));
+                    var image = new Image();
+                    image.src = request.imageData;
+                    var context = canvas.getContext('2d');
+                    context.drawImage(image, 0, 0);
+
+                    $( "body" ).empty();
+
                     // add canvas as a layer over the current layer
-                    document.body.appendChild(canvas);
+                    document.body.appendChild(image);
+                    //document.body.appendChild(canvas);
                     console.log("Done");
                 }
             });

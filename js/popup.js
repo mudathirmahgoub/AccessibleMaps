@@ -74,10 +74,15 @@ $(function () {
         // get the value of the selected radio input
         var mode = $('input[name=mode]:checked').val();
 
-        chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {type: mode, inversionEnabled: enabled});
-            console.log("Message sent");
+        chrome.tabs.captureVisibleTab(function(dataUrl){
+
+            chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+                chrome.tabs.sendMessage(tabs[0].id, {type: mode, inversionEnabled: enabled, imageData: dataUrl});
+                console.log("Message sent");
+            });
+
         });
+
     }
 
 });
