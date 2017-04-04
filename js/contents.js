@@ -76,6 +76,11 @@ $(function () {
                             var blueComponent = imageData.data[((i * (imageData.width * 4)) + (j * 4)) + 2];
                             var alphaComponent = imageData.data[((i * (imageData.width * 4)) + (j * 4)) + 3];
 
+                            if(! redComponent){
+                                // sometimes color can be undefined !!!
+                                continue;
+                            }
+
                             var rgba = "";
 
                             var rgba =  formatNumberLength(redComponent, 3) +
@@ -147,6 +152,9 @@ $(function () {
                             }
                         });
                     }
+
+                    // add canvas as a layer over the current layer
+                    document.body.appendChild(canvas);
                     console.log("Done");
                 }
             });
