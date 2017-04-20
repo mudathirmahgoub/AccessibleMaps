@@ -9,11 +9,15 @@ $(function () {
     initialize();
 
     function initialize() {
+
+        var lat = 41.66242160061023;
+        var lng = -91.53680428270343;
+
         var riverColor = $("#riverColor").val();
         var roadColor = $("#roadColor").val();
         var highwayColor = $("#highwayColor").val();
         var mapOptions = {
-            center: new google.maps.LatLng(41.66242160061023, -91.53680428270343),
+            center: new google.maps.LatLng(lat, lng),
             zoom: 17,
             disableDefaultUI: true,
             zoomControl: true,
@@ -105,6 +109,16 @@ $(function () {
 
         };
         map = new google.maps.Map(document.getElementById("mapDiv"), mapOptions);
+
+        setTimeout(moveCenter, 100);
+
+        function moveCenter() {
+            lng = lng + .00009;
+            console.log(lng)
+            map.setCenter(new google.maps.LatLng(lat, lng));
+            setTimeout(moveCenter, 100);
+        }
+
 
         google.maps.event.addListener(map, 'rightclick', function(event) {
             console.log(event.latLng.lat());
