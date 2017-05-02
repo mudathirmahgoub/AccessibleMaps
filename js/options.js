@@ -116,13 +116,39 @@ $(function () {
         map = new google.maps.Map(document.getElementById("mapDiv"), mapOptions);
         directionsDisplay.setMap(map);
 
-        setTimeout(moveCenter, 100);
+        computeRoute();
+
+        var pathPoints = [];
+        var centerIndex = 0;
+        function computeRoute(){
+            directionsService.route({
+                origin: "MacLean Hall, Iowa City, IA 52240",
+                destination: "IIHR - Hydroscience & Engineering, The University of Iowa, 300 S Riverside Dr # 207, Iowa City, IA 52246",
+                travelMode: 'WALKING'
+            }, function(response, status) {
+                if (status === 'OK') {
+                    console.log(response.routes[0].overview_path);
+                    pathPoints = response.routes[0].overview_path;
+
+                    directionsDisplay.setDirections(response);
+                    setTimeout(moveCenter, 100);
+
+                } else {
+                    window.alert('Directions request failed due to ' + status);
+                }
+            });
+
+        }
+
+      //  setTimeout(moveCenter, 100);
 
         function moveCenter() {
-            lng = lng + .00009;
-    //        console.log(lng)
-            map.setCenter(new google.maps.LatLng(lat, lng));
-            setTimeout(moveCenter, 100);
+            if(centerIndex < pathPoints.length){
+                console.log(pathPoints[centerIndex].lat()+ "," + pathPoints[centerIndex].lng());
+                map.setCenter(new google.maps.LatLng(pathPoints[centerIndex].lat(), pathPoints[centerIndex].lng()));
+                centerIndex++;
+                setTimeout(moveCenter, 500);
+            }
         }
 
 
