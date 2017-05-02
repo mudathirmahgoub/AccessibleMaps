@@ -2,8 +2,6 @@ $(function () {
     var map;
     var geocoder = new google.maps.Geocoder();
     var directionsService = new google.maps.DirectionsService();
-    var directionsDisplay = new google.maps.DirectionsRenderer;
-
 
 
     $("#riverColor").change(initialize);
@@ -114,7 +112,7 @@ $(function () {
         };
 
         map = new google.maps.Map(document.getElementById("mapDiv"), mapOptions);
-        directionsDisplay.setMap(map);
+
 
         computeRoute();
 
@@ -123,15 +121,42 @@ $(function () {
         function computeRoute(){
             directionsService.route({
                 origin: "MacLean Hall, Iowa City, IA 52240",
-                destination: "IIHR - Hydroscience & Engineering, The University of Iowa, 300 S Riverside Dr # 207, Iowa City, IA 52246",
+                destination: "Kinnick Stadium, Iowa City, IA",
                 travelMode: 'WALKING'
             }, function(response, status) {
                 if (status === 'OK') {
                     console.log(response.routes[0].overview_path);
                     pathPoints = response.routes[0].overview_path;
 
+                    var rendererOptions= {
+                        polylineOptions:{
+                            strokeWeight: 500,
+                            strokeColor: "#00FF00",
+                        }
+                    };
+
+                    var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+                    directionsDisplay.setMap(map);
                     directionsDisplay.setDirections(response);
-                    setTimeout(moveCenter, 100);
+                    // center the map at the initial point
+                    moveCenter();
+                    document.addEventListener('keydown', function(event) {
+                        // move forward
+                        if (event.keyCode == 38 || event.keyCode == 39 ) {
+                           if(centerIndex < pathPoints.length - 1) {
+                               centerIndex++;
+                               moveCenter();
+                           }
+                        }
+                        // move backward
+                        if (event.keyCode == 37 || event.keyCode == 40 ){
+                            if(centerIndex > 0){
+                                centerIndex --;
+                                moveCenter();
+                            }
+                        }
+
+                    });
 
                 } else {
                     window.alert('Directions request failed due to ' + status);
@@ -144,10 +169,8 @@ $(function () {
 
         function moveCenter() {
             if(centerIndex < pathPoints.length){
-                console.log(pathPoints[centerIndex].lat()+ "," + pathPoints[centerIndex].lng());
+                console.log(centerIndex);
                 map.setCenter(new google.maps.LatLng(pathPoints[centerIndex].lat(), pathPoints[centerIndex].lng()));
-                centerIndex++;
-                setTimeout(moveCenter, 500);
             }
         }
 
