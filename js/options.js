@@ -1,6 +1,10 @@
 $(function () {
     var map;
     var geocoder = new google.maps.Geocoder();
+    var directionsService = new google.maps.DirectionsService();
+    var directionsDisplay = new google.maps.DirectionsRenderer;
+
+
 
     $("#riverColor").change(initialize);
     $("#roadColor").change(initialize);
@@ -108,13 +112,15 @@ $(function () {
             ]
 
         };
+
         map = new google.maps.Map(document.getElementById("mapDiv"), mapOptions);
+        directionsDisplay.setMap(map);
 
         setTimeout(moveCenter, 100);
 
         function moveCenter() {
             lng = lng + .00009;
-            console.log(lng)
+    //        console.log(lng)
             map.setCenter(new google.maps.LatLng(lat, lng));
             setTimeout(moveCenter, 100);
         }
