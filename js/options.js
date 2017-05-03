@@ -2,7 +2,7 @@ $(function () {
     var map;
     var geocoder = new google.maps.Geocoder();
     var directionsService = new google.maps.DirectionsService();
-
+    var iconSize = 0.5;
 
     $("#riverColor").change(initialize);
     $("#roadColor").change(initialize);
@@ -117,6 +117,7 @@ $(function () {
         computeRoute();
 
         var pathPoints = [];
+        var pointsMarkers = [new google.maps.Marker()];
         var centerIndex = 0;
         function computeRoute(){
             directionsService.route({
@@ -127,6 +128,7 @@ $(function () {
                 if (status === 'OK') {
                     console.log(response.routes[0].overview_path);
                     pathPoints = response.routes[0].overview_path;
+
 
                     var rendererOptions= {
                         polylineOptions:{
@@ -140,10 +142,37 @@ $(function () {
                     directionsDisplay.setDirections(response);
                     // center the map at the initial point
                     moveCenter();
+
+                    // initialize points' markers
+                    pointsMarkers.splice(0, 1); // needed for avoiding undefined setMap
+                    for(i = 0; i < pathPoints.length; i++) {
+
+                        var icon = {
+                            path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
+                            fillColor: '#FF0000',
+                            fillOpacity: .6,
+                            anchor: new google.maps.Point(0,0),
+                            strokeWeight: 0,
+                            scale: iconSize
+                        };
+
+
+                        var marker = new google.maps.Marker({
+                            optimized: false,
+                            zIndex:999,
+                            icon: icon,
+                            position: new google.maps.LatLng(pathPoints[i].lat(),
+                                pathPoints[i].lng())});
+
+                        pointsMarkers.push(marker);
+                    }
+
                     document.addEventListener('keydown', function(event) {
                         // move forward
                         if (event.keyCode == 38 || event.keyCode == 39 ) {
                            if(centerIndex < pathPoints.length - 1) {
+                               // remove previous mark
+                               pointsMarkers[centerIndex].setMap(null);
                                centerIndex++;
                                moveCenter();
                            }
@@ -151,11 +180,12 @@ $(function () {
                         // move backward
                         if (event.keyCode == 37 || event.keyCode == 40 ){
                             if(centerIndex > 0){
+                                // remove previous mark
+                                pointsMarkers[centerIndex].setMap(null);
                                 centerIndex --;
                                 moveCenter();
                             }
                         }
-
                     });
 
                 } else {
@@ -165,12 +195,10 @@ $(function () {
 
         }
 
-      //  setTimeout(moveCenter, 100);
-
         function moveCenter() {
             if(centerIndex < pathPoints.length){
-                console.log(centerIndex);
                 map.setCenter(new google.maps.LatLng(pathPoints[centerIndex].lat(), pathPoints[centerIndex].lng()));
+                pointsMarkers[centerIndex].setMap(map);
             }
         }
 
