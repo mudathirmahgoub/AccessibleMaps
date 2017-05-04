@@ -6,12 +6,13 @@ $(function () {
         polylineOptions:{
             strokeWeight: 500,
             strokeColor: "#00FF00",
+            preserveViewport: true
         }
     };
     var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
     var pointsMarkers = [new google.maps.Marker()];
 
-    var iconSize = 0.5;
+    var iconSize = 1;
     var pathPoints = [];
     var centerIndex = 0;
 
@@ -227,7 +228,7 @@ $(function () {
                         path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
                         fillColor: '#FF0000',
                         fillOpacity: 1,
-                        anchor: new google.maps.Point(0,0),
+                        anchor: new google.maps.Point(1,1),
                         strokeWeight: 0,
                         scale: iconSize
                     };
@@ -281,7 +282,7 @@ $(function () {
 
     function moveCenter() {
         if(centerIndex < pathPoints.length){
-            map.setCenter(new google.maps.LatLng(pathPoints[centerIndex].lat(), pathPoints[centerIndex].lng()));
+            map.panTo(new google.maps.LatLng(pathPoints[centerIndex].lat(), pathPoints[centerIndex].lng()));
             pointsMarkers[centerIndex].setMap(map);
         }
     }
