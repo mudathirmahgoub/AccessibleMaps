@@ -29,6 +29,7 @@
         "js/screenshot/html2canvas.js",
         "js/screenshot/html2canvas.svg.js",
         "js/collections.min.js",
+        "js/base64js.js",
         "js/contents.js"
       ],
       "css": [
