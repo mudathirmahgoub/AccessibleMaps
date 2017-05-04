@@ -25,7 +25,7 @@ $(function () {
         {
             $("#placesDiv").addClass("placesVisible");
         }
-        autoComplete($(this));
+        autoComplete($(this), "Origin: ");
 
     });
 
@@ -39,7 +39,7 @@ $(function () {
             {
                 $("#placesDiv").addClass("placesVisible");
             }
-            autoComplete($(this));
+            autoComplete($(this), "Destination: ");
         }
     });
 
@@ -66,9 +66,9 @@ $(function () {
     });
 
 
-    function autoComplete(input) {
+    function autoComplete(input, prefix) {
         var inputPlace = input.val();
-        $("#searchPlace").text(inputPlace);
+        $("#searchPlace").text(prefix + inputPlace);
         $("#places").empty();
         if(inputPlace){
             var autocompleteService = new google.maps.places.AutocompleteService();
