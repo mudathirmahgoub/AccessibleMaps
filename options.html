@@ -15,13 +15,22 @@
 </head>
 <body>
 <form class="form-group">
-    <label>River Color: </label>
+    <label>River Color:  </label>
     <input type="color" id="riverColor" value="#0000ff">
-    <label>Road Color: </label>
+    <label>Road Color:  </label>
     <input type="color" id="roadColor" value="#dddddd">
     <label>Road highway  Color: </label>
     <input type="color" id="highwayColor" value="#ffaf00">
+    <label>Source:  </label>
+    <input type="search" id="sourcePlace">
+    <label>Destination:  </label>
+    <input type="search" id="destinationPlace">
 </form>
+<div id="placesDiv" class="placesHidden">
+    <div id="searchPlace"></div>
+    <ul id="places">
+    </ul>
+</div>
 <div id="mapDiv">
 </div>
 </body>

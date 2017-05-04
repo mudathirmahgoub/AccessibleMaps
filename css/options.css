@@ -12,3 +12,32 @@ body {
     height: 100%;
     width: 100%;
 }
+
+.form-group{
+    margin-top: 5px;
+}
+
+.placesHidden{
+    padding: 0 60px 0 116px;
+    height: 0;
+    width: 100%;
+}
+
+.placesVisible{
+    height: 100%;
+}
+
+#searchPlace{
+    font-size: 100px;
+}
+
+li.placeItem{
+    list-style-type: none;
+    font-size: 90px;
+    border-bottom: white solid 2px;
+    border-up: white solid 2px;
+}
+
+li.placeItem:hover{
+    color: #ffaf00;
+}

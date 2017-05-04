@@ -8,6 +8,62 @@ $(function () {
     $("#roadColor").change(initialize);
     $("#highwayColor").change(initialize);
 
+    $("#sourcePlace").keyup(function () {
+        autoComplete($(this));
+    });
+
+    $("#destinationPlace").keyup(function (event) {
+        // user pressed enter
+        if(event.keyCode == 13){
+            console.log("search here");
+        }
+        else {
+            autoComplete($(this));
+        }
+    });
+
+    $("#sourcePlace").focusin(function () {
+        $("#placesDiv").addClass("placesVisible");
+    });
+
+    $("#destinationPlace").focusin(function () {
+        $("#placesDiv").addClass("placesVisible");
+    });
+
+    $("#sourcePlace").focusout(function () {
+      //  $("#placesDiv").removeClass("placesVisible");
+    });
+    $("#destinationPlace").focusout(function () {
+      //  $("#placesDiv").removeClass("placesVisible");
+    });
+
+
+    function autoComplete(input) {
+        var inputPlace = input.val();
+        $("#searchPlace").text(inputPlace);
+        $("#places").empty();
+        if(inputPlace){
+            var autocompleteService = new google.maps.places.AutocompleteService();
+            var autocompletionRequest = {input: inputPlace};
+            autocompleteService.getPlacePredictions(autocompletionRequest, autocompleteCallBack);
+        }
+        function autocompleteCallBack(autocompletePredictions, placesServiceStatus)
+        {
+            if(placesServiceStatus == "OK")
+            {
+                for(var i = 0; i < autocompletePredictions.length; i++) {
+                    var description = autocompletePredictions[i].description;
+                    $("#places").append("<li class='placeItem'>" + description + "</li>")
+                }
+                $("#places li").click(function () {
+                    input.val($(this).text());
+                    input.trigger( "focus" );
+                    $("#placesDiv").removeClass("placesVisible");
+                });
+            }
+        }
+    }
+
     initialize();
 
     function initialize() {
@@ -158,8 +214,6 @@ $(function () {
 
 
                         var marker = new google.maps.Marker({
-                            optimized: false,
-                            zIndex:999,
                             icon: icon,
                             position: new google.maps.LatLng(pathPoints[i].lat(),
                                 pathPoints[i].lng())});
