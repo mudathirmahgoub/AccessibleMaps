@@ -5,7 +5,7 @@ $(function () {
     var rendererOptions= {
         polylineOptions:{
             strokeWeight: 500,
-            strokeColor: "#00FF00",
+            strokeColor: $("#directionColor").val(),
             preserveViewport: true
         }
     };
@@ -16,10 +16,34 @@ $(function () {
     var pathPoints = [];
     var centerIndex = 0;
 
+    var icon = {
+        path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
+        fillColor: $("#wayPointColor").val(),
+        fillOpacity: 1,
+        anchor: new google.maps.Point(1,1),
+        strokeWeight: 0,
+        scale: iconSize
+    };
+
     $("#riverColor").change(initialize);
     $("#roadColor").change(initialize);
     $("#highwayColor").change(initialize);
     $("#searchButton").click(getDirections);
+    $("#directionColor").change(function () {
+        rendererOptions.polylineOptions.strokeColor = $("#directionColor").val();
+        directionsDisplay.setOptions(rendererOptions);
+        directionsDisplay.setMap(map);
+        getDirections();
+    });
+
+    $("#wayPointColor").change(function () {
+
+        icon.fillColor = $("#wayPointColor").val();
+
+        for (var i = 0 ; i < pointsMarkers.length; i++){
+            pointsMarkers[i].setIcon(icon);
+        }
+    });
 
     $("#originPlace").keyup(function () {
         if(! $("#placesDiv").hasClass("placesVisible"))
@@ -223,16 +247,6 @@ $(function () {
                 }
                 pointsMarkers=[]; // needed for avoiding undefined setMap
                 for(i = 0; i < pathPoints.length; i++) {
-
-                    var icon = {
-                        path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
-                        fillColor: '#FF0000',
-                        fillOpacity: 1,
-                        anchor: new google.maps.Point(1,1),
-                        strokeWeight: 0,
-                        scale: iconSize
-                    };
-
 
                     var marker = new google.maps.Marker({
                         icon: icon,
