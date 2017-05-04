@@ -192,9 +192,15 @@ $(function () {
     function invertUsingManualColors(request) {
         console.log("Manual :" + request.inversionEnabled);
         if (request.inversionEnabled) {
-
+            $("*").each(function(){
+                $(this).css("background-color", request.backgroundColor);
+                $(this).css("color", request.foregroundColor );
+                $(this).css("border-color", request.borderColor );
+            });
         }
         else {
+            // reload the page
+            window.location.reload();
         }
     }
 

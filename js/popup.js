@@ -5,6 +5,10 @@ $(function () {
     // enable button element
     var enableButton = $("#enableButton");
 
+    $("#backgroundColor").change(sendFilterMessage);
+    $("#foregroundColor").change(sendFilterMessage);
+    $("#borderColor").change(sendFilterMessage);
+
     // read the last value for enabled from the storage
     chrome.storage.sync.get(['enabled'], function (items) {
         enabled = (items.enabled == 'true');
@@ -77,7 +81,15 @@ $(function () {
         chrome.tabs.captureVisibleTab(function(dataUrl){
 
             chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-                chrome.tabs.sendMessage(tabs[0].id, {type: mode, inversionEnabled: enabled, imageData: dataUrl});
+                chrome.tabs.sendMessage(tabs[0].id,
+                    {
+                        type: mode,
+                        inversionEnabled: enabled,
+                        imageData: dataUrl,
+                        backgroundColor: $("#backgroundColor").val(),
+                        foregroundColor: $("#foregroundColor").val(),
+                        borderColor: $("#borderColor").val()
+                    });
                 console.log("Message sent");
             });
 
