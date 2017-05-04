@@ -2,27 +2,49 @@ $(function () {
     var map;
     var geocoder = new google.maps.Geocoder();
     var directionsService = new google.maps.DirectionsService();
+    var rendererOptions= {
+        polylineOptions:{
+            strokeWeight: 500,
+            strokeColor: "#00FF00",
+        }
+    };
+    var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+    var pointsMarkers = [new google.maps.Marker()];
+
     var iconSize = 0.5;
+    var pathPoints = [];
+    var centerIndex = 0;
 
     $("#riverColor").change(initialize);
     $("#roadColor").change(initialize);
     $("#highwayColor").change(initialize);
 
-    $("#sourcePlace").keyup(function () {
+    $("#originPlace").keyup(function () {
+        if(! $("#placesDiv").hasClass("placesVisible"))
+        {
+            $("#placesDiv").addClass("placesVisible");
+        }
         autoComplete($(this));
+
     });
 
     $("#destinationPlace").keyup(function (event) {
         // user pressed enter
         if(event.keyCode == 13){
-            console.log("search here");
+            var origin = $("#originPlace").val();
+            var destination = $("#destinationPlace").val();
+            computeRoute(origin, destination);
         }
         else {
+            if(! $("#placesDiv").hasClass("placesVisible"))
+            {
+                $("#placesDiv").addClass("placesVisible");
+            }
             autoComplete($(this));
         }
     });
 
-    $("#sourcePlace").focusin(function () {
+    $("#originPlace").focusin(function () {
         $("#placesDiv").addClass("placesVisible");
     });
 
@@ -30,7 +52,7 @@ $(function () {
         $("#placesDiv").addClass("placesVisible");
     });
 
-    $("#sourcePlace").focusout(function () {
+    $("#originPlace").focusout(function () {
       //  $("#placesDiv").removeClass("placesVisible");
     });
     $("#destinationPlace").focusout(function () {
@@ -168,95 +190,6 @@ $(function () {
         };
 
         map = new google.maps.Map(document.getElementById("mapDiv"), mapOptions);
-
-
-        computeRoute();
-
-        var pathPoints = [];
-        var pointsMarkers = [new google.maps.Marker()];
-        var centerIndex = 0;
-        function computeRoute(){
-            directionsService.route({
-                origin: "MacLean Hall, Iowa City, IA 52240",
-                destination: "Kinnick Stadium, Iowa City, IA",
-                travelMode: 'WALKING'
-            }, function(response, status) {
-                if (status === 'OK') {
-                    console.log(response.routes[0].overview_path);
-                    pathPoints = response.routes[0].overview_path;
-
-
-                    var rendererOptions= {
-                        polylineOptions:{
-                            strokeWeight: 500,
-                            strokeColor: "#00FF00",
-                        }
-                    };
-
-                    var directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
-                    directionsDisplay.setMap(map);
-                    directionsDisplay.setDirections(response);
-                    // center the map at the initial point
-                    moveCenter();
-
-                    // initialize points' markers
-                    pointsMarkers.splice(0, 1); // needed for avoiding undefined setMap
-                    for(i = 0; i < pathPoints.length; i++) {
-
-                        var icon = {
-                            path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
-                            fillColor: '#FF0000',
-                            fillOpacity: .6,
-                            anchor: new google.maps.Point(0,0),
-                            strokeWeight: 0,
-                            scale: iconSize
-                        };
-
-
-                        var marker = new google.maps.Marker({
-                            icon: icon,
-                            position: new google.maps.LatLng(pathPoints[i].lat(),
-                                pathPoints[i].lng())});
-
-                        pointsMarkers.push(marker);
-                    }
-
-                    document.addEventListener('keydown', function(event) {
-                        // move forward
-                        if (event.keyCode == 38 || event.keyCode == 39 ) {
-                           if(centerIndex < pathPoints.length - 1) {
-                               // remove previous mark
-                               pointsMarkers[centerIndex].setMap(null);
-                               centerIndex++;
-                               moveCenter();
-                           }
-                        }
-                        // move backward
-                        if (event.keyCode == 37 || event.keyCode == 40 ){
-                            if(centerIndex > 0){
-                                // remove previous mark
-                                pointsMarkers[centerIndex].setMap(null);
-                                centerIndex --;
-                                moveCenter();
-                            }
-                        }
-                    });
-
-                } else {
-                    window.alert('Directions request failed due to ' + status);
-                }
-            });
-
-        }
-
-        function moveCenter() {
-            if(centerIndex < pathPoints.length){
-                map.setCenter(new google.maps.LatLng(pathPoints[centerIndex].lat(), pathPoints[centerIndex].lng()));
-                pointsMarkers[centerIndex].setMap(map);
-            }
-        }
-
-
         google.maps.event.addListener(map, 'rightclick', function(event) {
             console.log(event.latLng.lat());
             console.log(event.latLng.lng());
@@ -307,7 +240,84 @@ $(function () {
             });
         });
     }
-    initialize();
+
+    function computeRoute(origin, destination){
+        directionsService.route({
+            //  origin: "MacLean Hall, Iowa City, IA 52240",
+            //  destination: "Kinnick Stadium, Iowa City, IA",
+            origin: origin,
+            destination: destination,
+            travelMode: 'WALKING'
+        }, function(response, status) {
+            if (status === 'OK') {
+                pathPoints = response.routes[0].overview_path;
+                directionsDisplay.setMap(map);
+                directionsDisplay.setDirections(response);
+                // center the map at the initial point
+                moveCenter();
+
+                // initialize points' markers
+                for(i = 0; i < pointsMarkers.length; i++) {
+                    pointsMarkers[i].setMap(null);
+                }
+                pointsMarkers=[]; // needed for avoiding undefined setMap
+                for(i = 0; i < pathPoints.length; i++) {
+
+                    var icon = {
+                        path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
+                        fillColor: '#FF0000',
+                        fillOpacity: 1,
+                        anchor: new google.maps.Point(0,0),
+                        strokeWeight: 0,
+                        scale: iconSize
+                    };
+
+
+                    var marker = new google.maps.Marker({
+                        icon: icon,
+                        zIndex: 999,
+                        position: new google.maps.LatLng(pathPoints[i].lat(),
+                            pathPoints[i].lng())});
+
+                    pointsMarkers.push(marker);
+                }
+
+               // pointsMarkers[0].setMap(map);
+
+                document.addEventListener('keydown', function(event) {
+                    // move forward
+                    if (event.keyCode == 38 || event.keyCode == 39 ) {
+                        if(centerIndex < pathPoints.length - 1) {
+                            // remove previous mark
+                            pointsMarkers[centerIndex].setMap(null);
+                            centerIndex++;
+                            moveCenter();
+                        }
+                    }
+                    // move backward
+                    if (event.keyCode == 37 || event.keyCode == 40 ){
+                        if(centerIndex > 0){
+                            // remove previous mark
+                            pointsMarkers[centerIndex].setMap(null);
+                            centerIndex --;
+                            moveCenter();
+                        }
+                    }
+                });
+
+            } else {
+                window.alert('Directions request failed due to ' + status);
+            }
+        });
+
+    }
+
+    function moveCenter() {
+        if(centerIndex < pathPoints.length){
+            map.setCenter(new google.maps.LatLng(pathPoints[centerIndex].lat(), pathPoints[centerIndex].lng()));
+            pointsMarkers[centerIndex].setMap(map);
+        }
+    }
 
 });
 
