@@ -273,7 +273,7 @@ $(function () {
                 });
 
             } else {
-                window.alert('Directions request failed due to ' + status);
+               // window.alert('Directions request failed due to ' + status);
             }
         });
 
