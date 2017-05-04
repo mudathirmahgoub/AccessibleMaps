@@ -23,35 +23,16 @@ $(function () {
         }
     });
 
-
-
     function invertColorsUsingFilter(request) {
         console.log("Filter :" + request.inversionEnabled);
-
-        // $.each($("*"), function(index, element) {
-        //     console.log($(element));
-        //     console.log($(element).css("color"));
-        //     console.log($(element).css("background-color"));
-        // });
 
         if (request.inversionEnabled) {
             // invert the colors
             $("body").addClass("inversionEnabled");
-
-            // $.each($("*"), function(index, element) {
-            //     $(element).css({
-            //         "filter": "contrast(100%) invert(100%)"
-            //     });
-            // });
         }
         else {
             // remove the inversion
             $("body").removeClass("inversionEnabled");
-            // $.each($("*"), function(index, element) {
-            //     $(element).css({
-            //         "filter": "none"
-            //     });
-            // });
         }
     }
     function invertUsingDefaultColors(request) {
@@ -183,7 +164,6 @@ $(function () {
         }
     }
 
-
     function rgb2hex(rgbColor){
         var rgb = rgbColor;
         if(rgb.startsWith("rgba"))
@@ -197,8 +177,6 @@ $(function () {
             ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
             ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : rgbColor;
     }
-
-
 
 function formatNumberLength(num, length) {
         var r = "" + num;

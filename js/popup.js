@@ -37,12 +37,12 @@ $(function () {
     function setEnabledButtonText() {
 
         if (enabled) {
-            chrome.tts.speak('Enabled');
+            // chrome.tts.speak('Enabled');
             enableButton.text('Enabled');
         }
         else {
             enableButton.text('Disabled');
-            chrome.tts.speak('Disabled');
+            // chrome.tts.speak('Disabled');
         }
 
         chrome.tabs.getSelected(null, function (tab) {
