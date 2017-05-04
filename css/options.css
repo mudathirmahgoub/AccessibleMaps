@@ -41,3 +41,7 @@ li.placeItem{
 li.placeItem:hover{
     color: #ffaf00;
 }
+
+#searchButton{
+    margin-left: 10px;
+}

@@ -18,6 +18,7 @@ $(function () {
     $("#riverColor").change(initialize);
     $("#roadColor").change(initialize);
     $("#highwayColor").change(initialize);
+    $("#searchButton").click(getDirections);
 
     $("#originPlace").keyup(function () {
         if(! $("#placesDiv").hasClass("placesVisible"))
@@ -31,9 +32,7 @@ $(function () {
     $("#destinationPlace").keyup(function (event) {
         // user pressed enter
         if(event.keyCode == 13){
-            var origin = $("#originPlace").val();
-            var destination = $("#destinationPlace").val();
-            computeRoute(origin, destination);
+            getDirections();
         }
         else {
             if(! $("#placesDiv").hasClass("placesVisible"))
@@ -43,6 +42,13 @@ $(function () {
             autoComplete($(this));
         }
     });
+
+    function getDirections() {
+        var origin = $("#originPlace").val();
+        var destination = $("#destinationPlace").val();
+        computeRoute(origin, destination);
+    }
+
 
     $("#originPlace").focusin(function () {
         $("#placesDiv").addClass("placesVisible");
