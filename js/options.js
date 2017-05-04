@@ -191,53 +191,7 @@ $(function () {
 
         map = new google.maps.Map(document.getElementById("mapDiv"), mapOptions);
         google.maps.event.addListener(map, 'rightclick', function(event) {
-            console.log(event.latLng.lat());
-            console.log(event.latLng.lng());
-
-            var url =
-                "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-                event.latLng.lat() + "," + event.latLng.lng() + "&key=AIzaSyCb2qb3QksKFmP-bvV8RU2Rd1KoUEMYlf0";
-
-
-            $.get( url, function(data) {
-                console.log(data);
-                if(data.status == "OK")
-                {
-                    if(data.results.length > 0)
-                    {
-                        console.log(data.results[0].formatted_address);
-                        chrome.tts.speak(data.results[0].formatted_address);
-
-                        var request = {
-                            location:  event.latLng,
-                            radius: '10' // 10 meters
-                        };
-
-
-                        var service = new google.maps.places.PlacesService(map);
-                        service.nearbySearch(request, function (results, status) {
-                        if (status == google.maps.places.PlacesServiceStatus.OK) {
-                            for (var i = 0; i < results.length; i++) {
-                                var place = results[i];
-                                console.log(place);
-                            }
-                        }
-                    });
-
-                    }
-                    else
-                    {
-                        console.log("No result");
-                        chrome.tts.speak("No result");
-                    }
-                }
-            })
-            .fail(function() {
-                console.log( "Couldn't find the address of this location" );
-            })
-            .always(function() {
-                console.log( "finished" );
-            });
+            speakLocation(event.latLng.lat(), event.latLng.lng());
         });
     }
 
@@ -279,6 +233,13 @@ $(function () {
                         position: new google.maps.LatLng(pathPoints[i].lat(),
                             pathPoints[i].lng())});
 
+                    marker.addListener("click", function () {
+
+                        console.log(this);
+                        speakLocation(this.position.lat(), this.position.lng());
+
+                    });
+
                     pointsMarkers.push(marker);
                 }
 
@@ -317,6 +278,48 @@ $(function () {
             map.setCenter(new google.maps.LatLng(pathPoints[centerIndex].lat(), pathPoints[centerIndex].lng()));
             pointsMarkers[centerIndex].setMap(map);
         }
+    }
+
+    function speakLocation(lat, lng) {
+        var url =
+            "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+            lat + "," + lng + "&key=AIzaSyCb2qb3QksKFmP-bvV8RU2Rd1KoUEMYlf0";
+        $.get(url, function (data) {
+            console.log(data);
+            if (data.status == "OK") {
+                if (data.results.length > 0) {
+                    console.log(data.results[0].formatted_address);
+                    chrome.tts.speak(data.results[0].formatted_address);
+
+                    var request = {
+                        location: event.latLng,
+                        radius: '10' // 10 meters
+                    };
+
+
+                    var service = new google.maps.places.PlacesService(map);
+                    service.nearbySearch(request, function (results, status) {
+                        if (status == google.maps.places.PlacesServiceStatus.OK) {
+                            for (var i = 0; i < results.length; i++) {
+                                var place = results[i];
+                                console.log(place);
+                            }
+                        }
+                    });
+
+                }
+                else {
+                    console.log("No result");
+                    chrome.tts.speak("No result");
+                }
+            }
+        })
+            .fail(function () {
+                console.log("Couldn't find the address of this location");
+            })
+            .always(function () {
+                console.log("finished");
+            });
     }
 
 });
