@@ -9,5 +9,3 @@ To install Accessible maps:
 4- Open the options page to see the dynamic map
 
 5- Open any other page. The globe button on the extension will be enabled when loading is finished
-
-6- Customized Colors are not implemented yet
